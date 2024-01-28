@@ -4,6 +4,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { MapPin } from 'lucide-svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import ProductCard from '$lib/components/ProductCard.svelte';
 	export let data: PageData;
 	let product: {
 		image: { url: string };
@@ -95,41 +96,7 @@
 		<h1 class="mb-4 text-3xl font-bold">Similar Products</h1>
 		<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
 			{#each similarProducts as product}
-				<a href={`/product/${product._id}`} class="h-full">
-					<Card.Root class="flex h-full flex-col overflow-hidden rounded-xl shadow-lg">
-						<Card.Content class="flex-grow px-0">
-							<img
-								src={product.image.url}
-								alt={product.title}
-								class="h-[20rem] w-full rounded-xl object-cover object-center"
-							/>
-						</Card.Content>
-						<Card.CardContent class="flex flex-col gap-2 p-4">
-							<Card.Title class="text-xl font-medium capitalize tracking-wide"
-								>{product.title}</Card.Title
-							>
-							<Card.Description class="text-1xl font-semibold text-gray-600"
-								>{product.seller_name}</Card.Description
-							>
-							<Card.Description class="flex gap-2 capitalize text-gray-600">
-								<MapPin class="h-5 w-5" />
-								<div>
-									{product.location}
-								</div>
-							</Card.Description>
-							<Card.Description class="flex gap-2 text-xl font-semibold text-gray-600">
-								<!-- naira sign -->
-								&#8358;
-								<div>
-									{formatter.format(product.price)}
-								</div>
-							</Card.Description>
-							<Button class="rounded bg-black px-4 py-2 font-bold text-white hover:bg-slate-800">
-								Details
-							</Button>
-						</Card.CardContent>
-					</Card.Root>
-				</a>
+				<ProductCard {product} />
 			{/each}
 		</ul>
 	{/if}

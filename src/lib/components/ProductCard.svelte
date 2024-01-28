@@ -26,11 +26,15 @@
 <a href={`/product/${product._id}`} class="h-full">
 	<Card.Root class="flex h-full flex-col overflow-hidden rounded-xl shadow-lg">
 		<Card.Content class="flex-grow px-0">
-			<img
-				src={product.image.url}
-				alt={product.title}
-				class="h-[20rem] w-full rounded-xl object-cover object-center"
-			/>
+			{#if product.image.url}
+				<img
+					src={product.image.url}
+					alt={product.title}
+					class="h-[20rem] w-full rounded-xl object-cover object-center"
+				/>
+			{:else}
+				<div class="h-[20rem] w-full rounded-xl bg-gray-200"></div>
+			{/if}
 		</Card.Content>
 		<Card.CardContent class="flex flex-col gap-2 p-4">
 			<Card.Title class="text-xl font-medium capitalize tracking-wide">{product.title}</Card.Title>

@@ -93,7 +93,7 @@
 		</div>
 	</div>
 	{#if similarProducts.length > 0}
-		<h1 class="mb-4 text-3xl font-bold">Similar Products</h1>
+		<h1 class="my-4 mb-4 text-3xl font-bold lg:my-0">Similar Products</h1>
 		<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
 			{#each similarProducts as product}
 				<ProductCard {product} />

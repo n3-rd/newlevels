@@ -6,6 +6,7 @@
 
 	import ProductCard from '$lib/components/ProductCard.svelte';
 	import EmptyCategory from '$lib/components/EmptyCategory.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
 	export let data: PageData;
 	let products: WithId<Document>[];
 	let categories = [
@@ -24,8 +25,21 @@
 		maximumFractionDigits: 2
 	});
 
+	let val = '';
+	let timer: string | number | NodeJS.Timeout | undefined;
+
+	const debounce = (v: any) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			val = v;
+		}, 750);
+	};
+
+	let filteredProducts: WithId<Document>[];
+
 	$: {
 		products = data.products;
+		filteredProducts = products;
 		console.log(products);
 	}
 </script>
@@ -36,18 +50,31 @@
 
 <main class="px-6 pt-4">
 	<Tabs.Root value="all" class="w-full">
-		<div class="flex w-screen items-center justify-center">
+		<div class="flex w-screen flex-col items-center justify-center gap-3">
 			<Tabs.List>
 				{#each categories as category}
 					<Tabs.Trigger value={category.value}>{category.name}</Tabs.Trigger>
 				{/each}
 			</Tabs.List>
+
+			<Input
+				type="search"
+				placeholder="Search"
+				class="w-1/3"
+				bind:value={val}
+				on:input={(e) => {
+					debounce(val);
+					filteredProducts = products.filter((product) => {
+						return product.title.toLowerCase().includes(val.toLowerCase());
+					});
+				}}
+			/>
 		</div>
 		<Tabs.Content value="all">
 			<ul
 				class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
 			>
-				{#each products as product}
+				{#each filteredProducts as product}
 					<ProductCard {product} />
 				{/each}
 			</ul>
@@ -58,9 +85,8 @@
 				<ul
 					class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
 				>
-					{#each products as product}
+					{#each filteredProducts as product}
 						{#if product.category == category.name}
-							<!-- Corrected this line -->
 							<ProductCard {product} />
 						{/if}
 					{/each}

@@ -8,7 +8,16 @@ export const load: PageServerLoad = async ({ params }) => {
     if (product) {
         // Convert ObjectId instances to strings
         const productData = { ...product, _id: product._id.toString() };
+
+        // Fetch similar products
+        const similarProducts = await products.find({ category: product.category }).toArray();
+
+        // Convert ObjectId instances to strings for similar products
+        const similarProductsData = similarProducts.map(product => ({ ...product, _id: product._id.toString() }));
+
         console.log("product", productData);
-        return { product: productData };
+        console.log("similar products", similarProductsData);
+
+        return { product: productData, similarProducts: similarProductsData };
     }
 }

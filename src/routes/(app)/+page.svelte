@@ -5,6 +5,7 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 
 	import ProductCard from '$lib/components/ProductCard.svelte';
+	import EmptyCategory from '$lib/components/EmptyCategory.svelte';
 	export let data: PageData;
 	let products: WithId<Document>[];
 	let categories = [

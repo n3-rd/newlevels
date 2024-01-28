@@ -7,6 +7,11 @@
 	import { MapPin, Skull } from 'lucide-svelte';
 	export let data: PageData;
 	let products: WithId<Document>[];
+	const formatter = new Intl.NumberFormat('en-US', {
+		style: 'decimal',
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	});
 
 	$: {
 		products = data.products;
@@ -46,7 +51,7 @@
 							<!-- naira sign -->
 							&#8358;
 							<div>
-								{product.price}
+								{formatter.format(product.price)}
 							</div>
 						</Card.Description>
 						<Button class="rounded bg-black px-4 py-2 font-bold text-white hover:bg-slate-800">

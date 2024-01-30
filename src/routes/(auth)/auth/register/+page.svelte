@@ -14,7 +14,7 @@
 	import { failure, success } from '$lib/helpers/Toast';
 	import { getFirebaseErrorMessage } from '$lib/helpers/FirebaseErrors';
 	import Loader from '$lib/components/Loader.svelte';
-	import { createUser } from '$db/users';
+	import { createUser } from '$lib/helpers/helpers';
 
 	let name: string = '';
 	let email: string = '';
@@ -36,8 +36,8 @@
 		<Card.Content class="flex flex-col gap-6">
 			<Input class="px-2 py-6" placeholder="Email" type="email" bind:value={email} />
 			<Input class="px-2 py-6" placeholder="Name" type="name" bind:value={name} />
-			<!-- <Input class="px-2 py-6" placeholder="Location" type="location" />
-			<Input class="px-2 py-6" placeholder="Phone" type="phone" /> -->
+			<Input class="px-2 py-6" placeholder="Location" type="location" bind:value={location} />
+			<Input class="px-2 py-6" placeholder="Phone" type="phone" bind:value={phone} />
 			<Input class="px-2 py-6" placeholder="Password" type="password" bind:value={password} />
 			<Input
 				class="px-2 py-6"
@@ -58,15 +58,24 @@
 						await createUserWithEmailAndPassword(auth, email, password);
 						success('Account created successfully');
 						await updateProfile(auth.currentUser, { displayName: name });
-						createUser({
-							firebaseId: auth.currentUser.uid,
-							name: auth.currentUser.displayName,
-							email: auth.currentUser.email,
-							phone: phone,
+						const user = {
+							firebaseID: auth.currentUser.uid,
+							role: { $numberInt: '0' },
+							cart: [],
+							name: name,
+							email: email,
 							location: location,
-							role: 0,
-							premium: false
-						});
+							phone: phone
+						};
+
+						createUser(user)
+							.then((response) => {
+								console.log(response);
+							})
+							.catch((error) => {
+								console.error(error);
+							});
+
 						loading = false;
 						goto('/');
 					} catch (error) {

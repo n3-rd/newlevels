@@ -14,13 +14,14 @@
 	import { failure, success } from '$lib/helpers/Toast';
 	import { getFirebaseErrorMessage } from '$lib/helpers/FirebaseErrors';
 	import Loader from '$lib/components/Loader.svelte';
+	import { createUser } from '$db/users';
 
 	let name: string = '';
 	let email: string = '';
 	let password: string = '';
 	let password_confirmation: string = '';
 	let location: string = '';
-	let phone: string = '';
+	let phone: number;
 	let loading: boolean = false;
 
 	const auth = getAuth();
@@ -57,6 +58,15 @@
 						await createUserWithEmailAndPassword(auth, email, password);
 						success('Account created successfully');
 						await updateProfile(auth.currentUser, { displayName: name });
+						createUser({
+							firebaseId: auth.currentUser.uid,
+							name: auth.currentUser.displayName,
+							email: auth.currentUser.email,
+							phone: phone,
+							location: location,
+							role: 0,
+							premium: false
+						});
 						loading = false;
 						goto('/');
 					} catch (error) {

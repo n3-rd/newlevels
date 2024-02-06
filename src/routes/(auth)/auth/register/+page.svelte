@@ -14,7 +14,7 @@
 	import { failure, success } from '$lib/helpers/Toast';
 	import { getFirebaseErrorMessage } from '$lib/helpers/FirebaseErrors';
 	import Loader from '$lib/components/Loader.svelte';
-	import { createUser } from '$lib/helpers/helpers';
+	import { createUser, registerEmail } from '$lib/helpers/helpers';
 
 	let name: string = '';
 	let email: string = '';
@@ -55,27 +55,7 @@
 					e.preventDefault();
 					loading = true;
 					try {
-						await createUserWithEmailAndPassword(auth, email, password);
-						success('Account created successfully');
-						await updateProfile(auth.currentUser, { displayName: name });
-						const user = {
-							firebaseID: auth.currentUser.uid,
-							role: { $numberInt: '0' },
-							cart: [],
-							name: name,
-							email: email,
-							location: location,
-							phone: phone
-						};
-
-						createUser(user)
-							.then((response) => {
-								console.log(response);
-							})
-							.catch((error) => {
-								console.error(error);
-							});
-
+					registerEmail(email, password, name, location, phone);
 						loading = false;
 						goto('/');
 					} catch (error) {

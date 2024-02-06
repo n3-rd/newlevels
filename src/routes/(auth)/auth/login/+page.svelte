@@ -14,6 +14,7 @@
 	import { failure, success } from '$lib/helpers/Toast';
 	import { getFirebaseErrorMessage } from '$lib/helpers/FirebaseErrors';
 	import Loader from '$lib/components/Loader.svelte';
+	import { loginEmail } from '$lib/helpers/helpers';
 
 	let name: string = '';
 	let email: string = '';
@@ -45,8 +46,8 @@
 					e.preventDefault();
 					loading = true;
 					try {
-						await signInWithEmailAndPassword(auth, email, password);
-						success('Account created successfully');
+						await loginEmail(email, password);
+						success('Account Login Successful');
 						loading = false;
 						goto('/');
 					} catch (error) {

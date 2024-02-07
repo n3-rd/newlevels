@@ -3,11 +3,13 @@ import {PUBLIC_API_ENDPOINT} from '$env/static/public'
 
 
 export const load: PageServerLoad = async () => {
+
     let data = await fetch(`${PUBLIC_API_ENDPOINT}/products/`);
+ 
     data = await data.json();
-    console.log("data", data);
     return { products: data };
 }
+
 
 export const actions = {
     search: async ({request}) => {

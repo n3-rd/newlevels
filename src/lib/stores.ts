@@ -11,6 +11,7 @@ export type StoredUser ={
     phoneNumber: number,
     photoURL: string,
     role: number,
+    cart: string[],
 }
 
 export const storedUser = writable<StoredUser | null>(null);

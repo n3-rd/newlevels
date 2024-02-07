@@ -8,6 +8,7 @@
 	import { PUBLIC_API_ENDPOINT } from '$env/static/public';
 	import EmptyCategory from '$lib/components/EmptyComponent.svelte';
 	import EmptyComponent from '$lib/components/EmptyComponent.svelte';
+
 	export let data: PageData;
 	// export let form;
 

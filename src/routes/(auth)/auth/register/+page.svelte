@@ -14,7 +14,7 @@
 	import { failure, success } from '$lib/helpers/Toast';
 	import { getFirebaseErrorMessage } from '$lib/helpers/FirebaseErrors';
 	import Loader from '$lib/components/Loader.svelte';
-	import { createUser, registerEmail } from '$lib/helpers/helpers';
+	import { createGoogle, createUser, registerEmail } from '$lib/helpers/helpers';
 
 	let name: string = '';
 	let email: string = '';
@@ -55,7 +55,7 @@
 					e.preventDefault();
 					loading = true;
 					try {
-					registerEmail(email, password, name, location, phone);
+						registerEmail(email, password, name, location, phone);
 						loading = false;
 						goto('/');
 					} catch (error) {
@@ -79,8 +79,9 @@
 					e.preventDefault();
 					const provider = new GoogleAuthProvider();
 					try {
-						await signInWithPopup(auth, provider);
+						await createGoogle();
 						success('Google Sign In Successful');
+
 						goto('/');
 					} catch (error) {
 						const errorMessage = getFirebaseErrorMessage(error.code);

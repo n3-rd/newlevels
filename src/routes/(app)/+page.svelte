@@ -8,6 +8,7 @@
 	import { PUBLIC_API_ENDPOINT } from '$env/static/public';
 	import EmptyCategory from '$lib/components/EmptyComponent.svelte';
 	import EmptyComponent from '$lib/components/EmptyComponent.svelte';
+	import { onMount } from 'svelte';
 	export let data: PageData;
 	// export let form;
 
@@ -55,6 +56,10 @@
 
 	let val = '';
 	let timer: string | number | NodeJS.Timeout | undefined;
+	let page = 1;
+	let loading = false;
+
+	let hasMore = true;
 
 	const debounce = (v: any) => {
 		clearTimeout(timer);
@@ -71,6 +76,7 @@
 		} else {
 			filteredProducts = products;
 		}
+		page = 1;
 	};
 
 	let filteredProducts: [];
@@ -78,8 +84,40 @@
 	$: {
 		products = data.products;
 		filteredProducts = products;
+
 		console.log(products);
 	}
+
+	const loadMore = async () => {
+		if (loading || !hasMore) return;
+		loading = true;
+		page++;
+		const res = await fetch(`${PUBLIC_API_ENDPOINT}products?page=${page}`);
+		const newProducts = await res.json();
+		let updatedProducts = [...filteredProducts, ...newProducts];
+		// products = updatedProducts;
+		filteredProducts = updatedProducts;
+
+		console.log('fltered', filteredProducts);
+		loading = false;
+
+		// Assuming you're expecting 10 products per page
+		if (newProducts.length < 10) {
+			hasMore = false;
+		}
+	};
+
+	onMount(() => {
+		const handleScroll = () => {
+			if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+				loadMore();
+			}
+		};
+		window.addEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	});
 </script>
 
 <svelte:head>
@@ -115,6 +153,9 @@
 					<ProductCard {product} />
 				{/each}
 			</ul>
+			{#if loading}
+				<p>Loading more products...</p>
+			{/if}
 		</Tabs.Content>
 
 		{#each categories as category}
@@ -134,6 +175,10 @@
 						<EmptyComponent title="oh no!" subtitle="No products found" />
 					{/if}
 				</ul>
+
+				{#if loading}
+					<p>Loading more products...</p>
+				{/if}
 			</Tabs.Content>
 		{/each}
 	</Tabs.Root>

@@ -37,6 +37,7 @@
 	"type": "module",
 	"dependencies": {
 		"@zerodevx/svelte-toast": "^0.9.5",
+		"axios": "^1.6.7",
 		"bits-ui": "^0.15.1",
 		"clsx": "^2.1.0",
 		"embla-carousel-svelte": "8.0.0-rc20",

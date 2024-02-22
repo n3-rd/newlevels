@@ -18,7 +18,7 @@
 		category: string;
 		phone: number;
 	};
-	let similarProducts: WithId<Document>[];
+	let similarProducts;
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'decimal',
 		minimumFractionDigits: 2,

@@ -1,23 +1,16 @@
-import { products } from "$db/products";
-import type { PageServerLoad } from "./$types";
-import { ObjectId } from "mongodb";
+import { PUBLIC_API_ENDPOINT } from "$env/static/public";
 
-export const load: PageServerLoad = async ({ params }) => {
-    const { slug } = params;
-    const product = await products.findOne({ _id: new ObjectId(slug) });
-    if (product) {
-        // Convert ObjectId instances to strings
-        const productData = { ...product, _id: product._id.toString() };
+import { error } from '@sveltejs/kit';
 
-        // Fetch similar products
-        const similarProducts = await products.find({ category: product.category }).toArray();
+/** @type {import('./$types').PageServerLoad} */
+export async function load({ params }) {
+    let data = await fetch(`${PUBLIC_API_ENDPOINT}/products/${params.slug}`);
+    
+        data = await data.json()
+        console.log(data)
+	if (data) {
+		return data;
+	}
 
-        // Convert ObjectId instances to strings for similar products
-        const similarProductsData = similarProducts.map(product => ({ ...product, _id: product._id.toString() }));
-
-        console.log("product", productData);
-        console.log("similar products", similarProductsData);
-
-        return { product: productData, similarProducts: similarProductsData };
-    }
+	error(404, 'Not found');
 }

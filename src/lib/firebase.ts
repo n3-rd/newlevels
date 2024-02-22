@@ -7,6 +7,8 @@ import {
 	PUBLIC_PROJECT_ID,
 	PUBLIC_STORAGE_BUCKET
 } from '$env/static/public';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -18,3 +20,5 @@ export const firebaseConfig = {
 	appId: PUBLIC_APP_ID,
 	measurementId: PUBLIC_MEASUREMENT_ID
 };
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
